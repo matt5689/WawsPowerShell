@@ -1,0 +1,186 @@
+$AppName = ""
+
+[System.Uri]$Uri = "https://wawsobserver.azurewebsites.windows.net/api/sites/$AppName" # Add the Uri
+
+$ContentType = "application/json" # Add the content type
+
+$Method = 'GET' # Add the method type
+
+[System.Uri]$Uri = "https://wawsobserver.azurewebsites.windows.net/api/sites/$AppName" # Add the Uri
+
+$ContentType = "application/json" # Add the content type
+
+$Method = 'GET' # Add the method type
+
+#$Body = '{ "id" = 1, "Name" = "Peperoni" }' # Ad
+
+$Cookie = New-Object System.Net.Cookie
+
+$Cookie.Name = "AppServiceAuthSession"
+
+$Cookie.Value = "m1S/TQQda1NZXmQTbys58ZX91ASxv53/tXuqJyx2NVuHbPk5pV2QoTc1CFUipGFndMvIT3kBSc2TlqdRPzh92kVplYGodGyVohyLXWeBwST7xFRZtzuKwQVyxYJZS96MqGhAtTgk0Dqa2qCz1Bq+tDsX7ikBArtCMCunZ2ohGCrSUMzNEb/H32i1F/BwP/OHTyJcJr9yfjC0nLYVYWdrAqP2JSN/lYyCQ/koQ7esJAUNKdqeHKVGH/ZgExvK99GVmCqIxt9t6lLFyVo+fejoceD4cbXvsgkyINcyCUdFi9wSxutKmXJ6qsRW0/+eO7UqqkD9jvZnOYXYJstrXpXeK8Oi3QDFOOt/4ra2GLJoX43WTVpJTAjRxH7Aw5MoOW10aPPZJZFomP7yqCmO28fAS0J/Cm9Id0QgETJqxfSijijNcoX6Yd6tbBDLqBoSf6vRCafFrfUI93fx72v/7e7n3uk5dgLiGqYcNgUP3COT+mjbphJo2JJ2SfHnjw9tKbQnPj3/udbSHAtLS3YJQ221mgaZp0ls9ly78OQc+XfSiF81YuByoLS+qNEAKRqLiNEufK/CmtjSEGRJuOpI9r4wq4p7pIs+AB0/CGZTaMX6IdIVwGrbEVNvTmWQGHyiIxzxv/2g4sDbr4V6wsMgdcPbGA9ju8yoxhLb30ozIVnTI/+z+DrzHH46F8N68BbaB/iOrNczyTM59hdGkkyuSMBMrI63txBZ47HCkTFt8GDu2CKHOT5T8Sz+t453Zn4yZ1fL2XuU6SQRRjh0PQyCgXTJPWWPbAuf96DhCyor79uqvTvHXRTutVxI3/kUzfL6wly3SII6d3x6cKUwCzyuAWxtmVD+NADI/eTICB8lhVRzBtbmJBoFP2BPcXlM2fxcHvQPSp0DDPwukZh662tMhzk4hL6QPs32M2FBD9zuaGYcataCKKZgukoghRVMvA+PfpZYtkIgwyqU4NDYQ1XQvhIaLxuThhOTV36OcuVLGaFy9ERkC67WAgfThg6/N6cy+xoUqrjXDELllGnYtlwEn+sugDxnjSSjtZ25QK8hab3ja89pgiqy2ChsugTTULWEo2QhMD6PS+nOm/HCL8zGI1RTPNnFn/eXHBkCz1LcbObEA0n3t/Io7PsOVCxyl36+SeOCtmRtQEsHhAPBKnZvbU6kZiJjoNB9pYj3QhRYk1eh9AYh2S/BW9OSMUhL2tIIMaAvdsTmeBlHczQ69ONPM3ZnvqKEPR4bfgvXtshxikXlz3TexiPREKGuYpxIODhQ5y8JCfFfPEfPtqxoh97puI3EDLCIJSa8a04zT6eKkLBsg40="
+
+$Cookie.Domain = $uri.DnsSafeHost
+
+$WebSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$WebSession.Cookies.Add($Cookie)
+
+$Headers = @{
+    # Add name and value of headers
+    'Referer' = 'https://wawsobserver.azurewebsites.windows.net/sites/$AppName'
+}
+
+# Splat the parameters
+$props = @{
+    Uri         = $uri.AbsoluteUri
+    Headers     = $Headers
+    #Credential  = $Credential
+    ContentType = $ContentType
+    Method      = $Method
+    WebSession  = $WebSession
+    #Body        = $Body
+}
+
+$result = Invoke-RestMethod @props
+
+$result2 = $result | ConvertTo-Json
+
+$result3 = $result2 | ConvertFrom-Json
+
+$Linux = $result3.server_farm.is_linux
+$NumOfSites = $result3.web_workers.site_count[0]
+$SlotCount = $result3.slots.Count
+$WorkerCount = $result3.web_workers.Count
+$CustomContainer = $result3.linux_fx_version
+$32 = $result3.options -match '.*value=\"(\d+).*'
+$Name = $result3.name
+$AlwaysOn = $result3.always_on
+$Affinity = $result3.client_affinity_enabled
+$StampName = $result3.webspace.stamp.name
+$ASP = $result3.virtual_farm_name
+$CLR = $result3.clr_version
+$Created = $result3.Created
+$SKU = $result3.sku
+$Auth = $result3.site_auth_enabled
+$Kind = $result3.kind
+$VNet = $result3.vnet_name
+$region = $result3.webspace.name
+
+$triggers = $result3.triggers | ConvertFrom-Json
+
+$triggerCount = $triggers.triggers.Count
+
+#$preTriggers = $test2 = $test -replace '\\', ''
+#$preTriggers1 = $preTriggers | ConvertTo-Json
+#$Triggers = $preTriggers1 | ConvertFrom-Json
+
+$PreTriggers = $result3.triggers
+$PreTriggers1 = $PreTriggers | ConvertTo-Json
+$PreTriggers2 = $PreTriggers1 | ConvertFrom-Json
+
+$FinalResult = "(OS: $Linux | NumOfSites: $NumOfSites | SlotCount: $SlotCount | WorkerCount: $WorkerCount | CustomContainer: $CustomContainer"
+$FinalResult += " | 32Bit: $32 | Name: $Name | AlwaysOn: $AlwaysOn | Affinity: $Affinity | StampName: $StampName"
+$FinalResult += " | AppServicePlan: $ASP | CLR: $CLR | Created: $Created | SKU: $SKU | Auth: $Auth | Kind: $Kind | VNet: $VNet | triggerCount: $triggerCount | $region)"
+
+Write-Host $FinalResult
+$triggersDetails = ""
+
+foreach($i in $triggers.triggers)
+{
+    Write-Host $i
+    $triggersDetails = $triggersDetails + $i + "`r"
+}
+
+Write-Host $triggersDetails
+
+$clipboardValue = $FinalResult + "`r" + $triggersDetails
+
+$myResult = $clipboardValue + "`r" + $triggersDetails
+
+Set-Clipboard -Value $myResult
+
+
+$Cookie = New-Object System.Net.Cookie
+
+$Cookie.Name = "AppServiceAuthSession"
+
+$Cookie.Value = ""
+
+$Cookie.Domain = $uri.DnsSafeHost
+
+$WebSession = New-Object Microsoft.PowerShell.Commands.WebRequestSession
+$WebSession.Cookies.Add($Cookie)
+
+$Headers = @{
+    # Add name and value of headers
+    'Referer' = 'https://wawsobserver.azurewebsites.windows.net/sites/$AppName'
+}
+
+# Splat the parameters
+$props = @{
+    Uri         = $uri.AbsoluteUri
+    Headers     = $Headers
+    #Credential  = $Credential
+    ContentType = $ContentType
+    Method      = $Method
+    WebSession  = $WebSession
+    #Body        = $Body
+}
+
+$result = Invoke-RestMethod @props
+
+$result2 = $result | ConvertTo-Json
+
+$result3 = $result2 | ConvertFrom-Json
+
+$Linux = $result3.server_farm.is_linux
+$NumOfSites = $result3.web_workers.site_count[0]
+$SlotCount = $result3.slots.Count
+$WorkerCount = $result3.web_workers.Count
+$CustomContainer = $result3.linux_fx_version
+$32 = $result3.options -match '.*value=\"(\d+).*'
+$Name = $result3.name
+$AlwaysOn = $result3.always_on
+$Affinity = $result3.client_affinity_enabled
+$StampName = $result3.webspace.stamp.name
+$ASP = $result3.virtual_farm_name
+$CLR = $result3.clr_version
+$Created = $result3.Created
+$SKU = $result3.sku
+$Auth = $result3.site_auth_enabled
+$Kind = $result3.kind
+$VNet = $result3.vnet_name
+$region = $result3.webspace.name
+
+$triggers = $result3.triggers | ConvertFrom-Json
+
+$triggerCount = $triggers.triggers.Count
+
+#$preTriggers = $test2 = $test -replace '\\', ''
+#$preTriggers1 = $preTriggers | ConvertTo-Json
+#$Triggers = $preTriggers1 | ConvertFrom-Json
+
+$PreTriggers = $result3.triggers
+$PreTriggers1 = $PreTriggers | ConvertTo-Json
+$PreTriggers2 = $PreTriggers1 | ConvertFrom-Json
+
+$FinalResult = "(OS: $Linux | NumOfSites: $NumOfSites | SlotCount: $SlotCount | WorkerCount: $WorkerCount | CustomContainer: $CustomContainer"
+$FinalResult += " | 32Bit: $32 | Name: $Name | AlwaysOn: $AlwaysOn | Affinity: $Affinity | StampName: $StampName"
+$FinalResult += " | AppServicePlan: $ASP | CLR: $CLR | Created: $Created | SKU: $SKU | Auth: $Auth | Kind: $Kind | VNet: $VNet | triggerCount: $triggerCount | $region)"
+
+Write-Host $FinalResult
+$triggersDetails = ""
+
+foreach($i in $triggers.triggers)
+{
+    Write-Host $i
+    $triggersDetails = $triggersDetails + $i + "`r"
+}
+
+Write-Host $triggersDetails
+
+$clipboardValue = $FinalResult + "`r" + $triggersDetails
+
+$myResult = $clipboardValue + "`r" + $triggersDetails
+
+Set-Clipboard -Value $myResult
